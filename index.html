@@ -1,19 +1,114 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flashsale Tlynh</title>
   <style>
-    body { font-family: sans-serif; text-align: center; background: #fffbe7; padding: 50px; }
-    h1 { color: #e60012; }
-    p { font-size: 18px; color: #333; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff7f7;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background: linear-gradient(90deg, #ff6b6b, #ff9f43);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    #flashsale {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      padding: 20px;
+    }
+    .item {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+      padding: 10px;
+      text-align: center;
+      transition: all 0.2s ease-in-out;
+    }
+    .item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    }
+    .item img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .item h4 {
+      font-size: 0.95rem;
+      min-height: 45px;
+      margin: 5px 0;
+    }
+    .price {
+      color: #e74c3c;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin: 5px 0;
+    }
+    .buy {
+      background: #ff6b6b;
+      color: white;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      display: inline-block;
+      font-size: 0.9rem;
+    }
+    footer {
+      text-align: center;
+      color: #999;
+      font-size: 0.8rem;
+      margin: 20px 0;
+    }
   </style>
 </head>
 <body>
-  <h1>🔥 Flashsale Tlynh đang hoạt động!</h1>
-  <p>Trang này sẽ cập nhật link Flashsale tự động sau.</p>
+  <header>🔥 FLASHSALE TLYNH 🔥</header>
+
+  <div id="flashsale">⏳ Đang tải flash sale...</div>
+
+  <footer>© 2025 Flashsale Tlynh | Tự động cập nhật sản phẩm Shopee mỗi 30 phút</footer>
+
+  <script>
+    const flashSaleContainer = document.getElementById("flashsale");
+
+    async function loadFlashSale() {
+      flashSaleContainer.innerHTML = "⏳ Đang tải flash sale...";
+
+      try {
+        const res = await fetch("https://shopee.vn/api/v4/flash_sale/flash_sale_get_items?limit=10&offset=0");
+        const data = await res.json();
+
+        flashSaleContainer.innerHTML = "";
+
+        data.data.items.forEach(item => {
+          const affLink = `https://s.shopee.vn/AKSQWZJFVm?deep_and_web=1&url=${encodeURIComponent("https://shopee.vn/product/" + item.shopid + "/" + item.itemid)}`;
+          const price = (item.price / 100000).toLocaleString();
+
+          flashSaleContainer.innerHTML += `
+            <div class="item">
+              <img src="https://down-vn.img.susercontent.com/file/${item.image}" alt="${item.name}">
+              <h4>${item.name}</h4>
+              <div class="price">💰 ${price}₫</div>
+              <a class="buy" href="${affLink}" target="_blank">🛒 Mua ngay</a>
+            </div>
+          `;
+        });
+      } catch (e) {
+        flashSaleContainer.innerHTML = "❌ Lỗi tải dữ liệu flash sale!";
+      }
+    }
+
+    loadFlashSale();
+  </script>
 </body>
 </html>
-<div id="flashsale"></div>
-<script src="script.js"></script>
