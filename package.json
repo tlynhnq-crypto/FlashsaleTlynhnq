@@ -1,0 +1,12 @@
+{
+  "name": "flashsaletlynh",
+  "version": "1.0.0",
+  "description": "Auto update Shopee flash sale products",
+  "main": "updater.js",
+  "scripts": {
+    "start": "node updater.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.0"
+  }
+}
