@@ -1,0 +1,26 @@
+import axios from "axios";
+import fs from "fs";
+
+const AFFILIATE = "https://s.shopee.vn/7V8HRT3LXV";
+
+async function fetchFlashSale() {
+  const url = "https://shopee.vn/api/v4/flash_sale/flash_sale_get_items?limit=20&offset=0";
+  const res = await axios.get(url, {
+    headers: { "User-Agent": "Mozilla/5.0" },
+  });
+
+  const items = res.data.data.items.map((item) => ({
+    id: item.itemid,
+    name: item.name,
+    price: (item.price / 100000).toLocaleString("vi-VN") + "₫",
+    image: `https://down-vn.img.susercontent.com/file/${item.image}`,
+    link: `${AFFILIATE}?deep_and_web=1&url=${encodeURIComponent(
+      `https://shopee.vn/product/${item.shopid}/${item.itemid}`
+    )}`,
+  }));
+
+  fs.writeFileSync("deals.json", JSON.stringify(items, null, 2));
+  console.log("✅ Cập nhật flash sale thành công:", new Date().toLocaleString());
+}
+
+fetchFlashSale().catch((err) => console.error("❌ Lỗi:", err.message));
